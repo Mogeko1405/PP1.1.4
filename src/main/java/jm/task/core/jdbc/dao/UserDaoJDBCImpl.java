@@ -3,10 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +23,23 @@ public class UserDaoJDBCImpl implements UserDao {
                 lastname varchar(45) null,
                 age tinyint null
                 );""";
-        try (Statement statement = Util.getConnection().createStatement()) {
+        try (Connection connection = Util.getConnection();
+             Statement statement = connection.createStatement()) {
+            connection.setAutoCommit(false);
             statement.executeUpdate(query);
+            connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void dropUsersTable() {
-        String query = """
-                drop table if exists users;
-                """;
-        try (Statement statement = Util.getConnection().createStatement()) {
+        String query = "DROP TABLE IF EXISTS users";
+        try (Connection connection = Util.getConnection();
+             Statement statement = connection.createStatement()) {
+            connection.setAutoCommit(false);
             statement.executeUpdate(query);
+            connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
