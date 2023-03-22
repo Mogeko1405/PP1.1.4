@@ -13,7 +13,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     }
 
-    public void createUsersTable() throws SQLException {
+    public void createUsersTable() {
         String query = """
                 create table if not exists ppdb.users
                 (
@@ -32,13 +32,17 @@ public class UserDaoJDBCImpl implements UserDao {
             connection.commit();
         } catch (SQLException e) {
             if (connection != null) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             e.printStackTrace();
         }
     }
 
-    public void dropUsersTable() throws SQLException {
+    public void dropUsersTable() {
         String query = "DROP TABLE IF EXISTS users";
         Connection connection = null;
         try {
@@ -49,13 +53,17 @@ public class UserDaoJDBCImpl implements UserDao {
             connection.commit();
         } catch (SQLException e) {
             if (connection != null) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             e.printStackTrace();
         }
     }
 
-    public void saveUser(String name, String lastName, byte age) throws SQLException {
+    public void saveUser(String name, String lastName, byte age) {
         String query = "INSERT INTO users(`name`, lastname, age) VALUES (?, ?, ?)";
         Connection connection = null;
         try {
@@ -70,13 +78,17 @@ public class UserDaoJDBCImpl implements UserDao {
             System.out.println("User с именем - " + name + " добавлен в базу данных");
         } catch (SQLException e) {
             if (connection != null) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             e.printStackTrace();
         }
     }
 
-    public void removeUserById(long id) throws SQLException {
+    public void removeUserById(long id) {
         String query = "DELETE FROM users WHERE id = ?";
         Connection connection = null;
         try {
@@ -88,7 +100,11 @@ public class UserDaoJDBCImpl implements UserDao {
             connection.commit();
         } catch (SQLException e) {
             if (connection != null) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             e.printStackTrace();
         }
@@ -115,7 +131,7 @@ public class UserDaoJDBCImpl implements UserDao {
         return users;
     }
 
-    public void cleanUsersTable() throws SQLException {
+    public void cleanUsersTable() {
         String query = "DELETE FROM users";
         Connection connection = null;
         try {
@@ -126,7 +142,11 @@ public class UserDaoJDBCImpl implements UserDao {
             connection.commit();
         } catch (SQLException e) {
             if (connection != null) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             e.printStackTrace();
         }
